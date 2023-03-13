@@ -1,42 +1,43 @@
-import data from "../database/data"
-import * as Action from '../redux/question_reducer'
 import { useEffect, useState } from "react"
-import { useDispatch } from "react-redux"
+import { useDispatch } from "react-redux";
+import { getServerData } from "../helper/helper";
 
-// this is the fetch question hook to fetch api data and send value to the store
+/** redux actions */
+import * as Action from '../redux/question_reducer'
 
-export const useFetchQuestion = () => {
-
-    const dispatch = useDispatch();
-    const [getData, setGetData] = useState({ isLoading: false, apiData: [], serverError: null })
+/** fetch question hook to fetch api data and set value to store */
+export const useFetchQestion = () => {
+    const dispatch = useDispatch();   
+    const [getData, setGetData] = useState({ isLoading : false, apiData : [], serverError: null});
 
     useEffect(() => {
-        setGetData(prev => ({ ...prev, isLoading: true }));
+        setGetData(prev => ({...prev, isLoading : true}));
 
-        // async function to fetch the backend data
+        /** async function fetch backend data */
         (async () => {
             try {
-                let question = await data;
-
-                if (question.length > 0) {
-                    setGetData(prev => ({ ...prev, isLoading: false }));
-                    setGetData(prev => ({ ...prev, apiData: question }));
+                const [{ questions, answers }] = await getServerData(`${process.env.REACT_APP_SERVER_HOSTNAME}/api/questions`, (data) => data)
                 
-                    // dispatch an action, allows us to updata the store
+                if(questions.length > 0){
+                    setGetData(prev => ({...prev, isLoading : false}));
+                    setGetData(prev => ({...prev, apiData : questions}));
 
-                    dispatch(Action.startExamAction(question))
-                }else{
-                    throw new Error("no question avaliable")
+                    /** dispatch an action */
+                    dispatch(Action.startExamAction({ question : questions, answers }))
+
+                } else{
+                    throw new Error("No Question Avalibale");
                 }
             } catch (error) {
-                setGetData(prev => ({ ...prev, isLoading: false }));
-                setGetData(prev => ({ ...prev, serverError: error }));
+                setGetData(prev => ({...prev, isLoading : false}));
+                setGetData(prev => ({...prev, serverError : error}));
             }
         })();
-    }, [dispatch])
+    }, [dispatch]);
 
     return [getData, setGetData];
 }
+
 
 /** MoveAction Dispatch function */
 export const MoveNextQuestion = () => async (dispatch) => {
