@@ -2,6 +2,7 @@ import React, { useRef } from 'react'
 import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { setUserId } from '../redux/result_reducer'
+import '../styles/App.css'
 import '../styles/Main.css'
 
 export default function Main() {
@@ -14,6 +15,7 @@ export default function Main() {
         if(inputRef.current?.value){
             dispatch(setUserId(inputRef.current?.value))
         }
+        console.log("ello there mate")
     }
 
   return (
