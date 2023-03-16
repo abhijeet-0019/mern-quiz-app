@@ -13,7 +13,7 @@ import * as controllers from '../controllers/controllers.js';
 router.route('/questions')
     .get(controllers.getQuestions)  // GET Request
     .post(controllers.insertQuestions)  // POST Request
-    .delete(controllers.deleteQuestions)
+    .delete(controllers.deleteQuestions)    // DELETE Request
 
 router.route('/result')
     .get(controllers.getResult)
