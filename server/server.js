@@ -4,7 +4,10 @@ import cors from 'cors';
 import { config } from "dotenv";
 import router from "./router/route.js";
 
-const app = express()
+// import connnection file
+import connect from "./database/conn.js";
+
+const app = express(); // app object will be used to define the roues and start the server
 
 // app middlewares
 app.use(morgan('tiny'))
@@ -18,7 +21,6 @@ const port = process.env.PORT || 8000;
 // routes //
 app.use('/api', router) // api route
 
-
 app.get('/', (req, res)=> {
     try{
         res.json("Get Request")
@@ -27,7 +29,16 @@ app.get('/', (req, res)=> {
     }
 })
 
-// starting the server, making it to listen on localhost 8000
-app.listen(port, ()=> {
-    console.log(`Server connected to the local host ${port}`)
+// start server only when we have a valid connection
+connect().then(()=>{
+    try {
+        // starting the server, making it to listen on localhost
+        app.listen(port, ()=> {
+            console.log(`Server connected to the local host ${port}`)
+        })
+    } catch(error){
+        console.log("cannot connect with the server", err);
+    }
+}).catch(error => {
+    console.log("Invalid Database Connection", err);
 })
