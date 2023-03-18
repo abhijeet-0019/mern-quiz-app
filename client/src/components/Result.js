@@ -9,7 +9,7 @@ import { attempts_Number, earnPoints_Number, flagResult } from '../helper/helper
 // /** import actions  */
 import { resetAllAction } from '../redux/question_reducer';
 import { resetResultAction } from '../redux/result_reducer';
-// import { usePublishResult } from '../hooks/setResult';
+import { usePublishResult } from '../hooks/setResult';
 
 
 // export default function Result() {
@@ -23,14 +23,7 @@ import { resetResultAction } from '../redux/result_reducer';
 // const flag = flagResult(totalPoints, earnPoints)
 
 
-//   /** store user result */
-//   usePublishResult({
-//     result,
-//     username: userId,
-//     attempts,
-//     points: earnPoints,
-//     achived: flag ? "Passed" : "Failed"
-//   });
+  
 
 //   function onRestart() {
 //     dispatch(resetAllAction())
@@ -103,9 +96,16 @@ export default function Result() {
   const earnPoints = earnPoints_Number(result, answers, 10)
   const flag = flagResult(totalPoints, earnPoints)
 
+  /** store user result */
+  usePublishResult({
+    result,
+    username: userId,
+    attempts,
+    points: earnPoints,
+    achived: flag ? "Passed" : "Failed"
+  });
 
   function onRestart() {
-    console.log('On Restart')
     dispatch(resetAllAction())
     dispatch(resetResultAction())
   }

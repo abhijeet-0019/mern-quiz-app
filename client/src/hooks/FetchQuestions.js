@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react"
 import { useDispatch } from "react-redux";
 import { getServerData } from "../helper/helper";
-// import '../database/data'
+// import data, {answers}  from  '../database/data'
 
 /** redux actions */
 import * as Action from '../redux/question_reducer'
-import { default as questions, answers } from "../database/data";
+// import { default as questions, answers } from "../database/data";
 
 /** fetch question hook to fetch api data and set value to store */
 export const useFetchQestion = () => {
@@ -15,12 +15,17 @@ export const useFetchQestion = () => {
     useEffect(() => {
         setGetData(prev => ({...prev, isLoading : true}));
 
-        console.log("--->", answers);
-        console.log("--->", questions);
+        // these are console log of data.js file below we have use to get data form server, using getServerData
+        // console.log("--->", answers);
+        // console.log("--->", questions);
+
+
         /** async function fetch backend data */
         (async () => {
             try {
-                // const [{ questions, answers }] = await getServerData(`${process.env.REACT_APP_SERVER_HOSTNAME}/api/questions`, (data) => data)
+                // let questions = await data;
+                const [{questions, answers}] = await getServerData(`${process.env.REACT_APP_SERVER_HOSTNAME}/api/questions`, (data) => data)
+
                 if(questions.length > 0){
                     setGetData(prev => ({...prev, isLoading : false}));
                     setGetData(prev => ({...prev, apiData : questions}));
